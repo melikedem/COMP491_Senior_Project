@@ -6,12 +6,12 @@ from io import BytesIO
 class googleSearch(object):
     
     def __init__(self):
-        self.service = build("customsearch", "v1", developerKey="AIzaSyCuAhMTvPe6OjKzExg4Kq3-nUHZO28FQGY")
+        self.service = build("customsearch", "v1", developerKey="developerKey")
         pass
     def searchObj(self, obj):
         res = self.service.cse().list(
             q=obj,
-            cx='000944690668338917451:3sikref42kq',
+            cx='cx',
             searchType='image',
             num=1,
             fileType='jpeg',
