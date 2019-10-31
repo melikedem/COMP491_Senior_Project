@@ -3,10 +3,23 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style type="text/css">
+        .btn {
+              background-color: #4CAF50;
+              border: none;
+              color: white;
+              padding: 15px 32px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-size: 16px;
+              margin: 4px 2px;
+              cursor: pointer;
+        }
+</style>
     <title>p5.js example</title>
-    <style> body {padding: 0; margin: 0;} </style>
       <form action='request_page' method='GET'>
-       <button type="submit" name="mybtn" value="true">Record</button>
+       <div style="text-align: center;"> <button type="submit" class="btn" name="mybtn" value="true">Record</button></div>
       </form>
       <script src="p5.js"></script>
       <script src="p5.sound.js"></script>

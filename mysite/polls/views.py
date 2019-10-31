@@ -8,6 +8,9 @@ import nltk
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from collections import defaultdict
+from quickdraw import QuickDrawData
+from PIL import Image
+from io import StringIO
 
 
 def index(request):
@@ -22,7 +25,6 @@ def request_page(request):
     text = "test"
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Say something!")
         audio = r.listen(source)
     try:
         sentence = r.recognize_google(audio, language="tr-TR")
@@ -43,9 +45,22 @@ def request_page(request):
         text = "Could not request results from Google Speech Recognition service; {0}".format(e)
     return render(request, 'polls/readyToDraw.html', context)
 
-def extract_objects(pos_tagged_sentence):
-    obj_lst=[]
-    for tagged_word in pos_tagged_sentence:
-        if(tagged_word[1]=="NN"):
-            obj_lst.append(tagged_word[0])
-    return obj_lst
+
+def draw_objects(request):
+    qd = QuickDrawData()
+    objects = request.GET.get('objects')
+    objects = objects.replace("'", "")
+    print(objects)
+    list = objects.strip("][").split(', ')
+    images = []
+    img_lst = []
+    print(objects)
+    print(objects[0])
+    for o in list:
+        print(o)
+        #img_lst.append(qd.get_drawing(o))
+        images.append(qd.get_drawing(o).image)
+        qd.get_drawing(o).image.show()
+    return HttpResponse("<img src='/deneme.jpg'>")
+
+
