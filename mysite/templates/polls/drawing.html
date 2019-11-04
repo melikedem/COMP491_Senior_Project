@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style type="text/css">
+
+      </style>
+    <title>p5.js example</title>
+      {% load staticfiles %}
+        {{ object | json_script:"object" }}
+        <script type="text/javascript" src="{% static "p5.js" %}"></script>
+        <script type="text/javascript" src="{% static "sketch.js" %}"></script>
+  </head>
+  <body>
+  </body>
+</html>
