@@ -21,9 +21,11 @@
       <form action='request_page' method='GET'>
        <div style="text-align: center;"> <button type="submit" class="btn" name="mybtn" value="true">Record</button></div>
       </form>
-      <script src="p5.js"></script>
-      <script src="p5.sound.js"></script>
-      <script src="sketch.js"></script>
+
+      {% load staticfiles %}
+        {{ object | json_script:"object" }}
+        <script type="text/javascript" src="{% static "p5.js" %}"></script>
+        <script type="text/javascript" src="{% static "sketch.js" %}"></script>
   </head>
   <body>
   </body>

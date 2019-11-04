@@ -50,17 +50,7 @@ def draw_objects(request):
     qd = QuickDrawData()
     objects = request.GET.get('objects')
     objects = objects.replace("'", "")
-    print(objects)
     list = objects.strip("][").split(', ')
-    images = []
-    img_lst = []
-    print(objects)
-    print(objects[0])
-    for o in list:
-        print(o)
-        #img_lst.append(qd.get_drawing(o))
-        images.append(qd.get_drawing(o).image)
-        qd.get_drawing(o).image.show()
-    return HttpResponse("<img src='/deneme.jpg'>")
+    return render(request, 'polls/drawing.html', {'object': list[0]})
 
 
