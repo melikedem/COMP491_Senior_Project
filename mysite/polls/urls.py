@@ -4,6 +4,6 @@ from . import views
 
 urlpatterns = [
     path('index', views.index),
-    path('request_page', views.request_page),
+    path('record', views.recordAndDraw),
     path('draw_objects', views.draw_objects),
 ]

@@ -3,8 +3,8 @@
 const url1 = 'https://quickdrawfiles.appspot.com/drawing/'
 const url2 = '?&key=AIzaSyC1_soqtXV1mTyetVpJ4GglGD5RtXuFp4o&isAnimated=false&format=JSON'
 
-let thingname;
-let drawingthing;
+
+let obj;
 
 let strokeIndex = 0;
 let index = 0;
@@ -13,63 +13,63 @@ let prevx, prevy;
 let url; 
 let pick;
 
+
 function setup() {
+  let thingname = JSON.parse(document.getElementById('json').textContent);
+  let a = JSON.parse(thingname);
+  obj = new DrawingObject(a.name, a.color, a.size, a.number, 300, 100, a.strokeArray);
   var canvas = createCanvas(1060,450);
   canvas.parent("sketchholder");
-  newDraw();
 }
 
-function pickathing(){
-  thingname = JSON.parse(document.getElementById('object').textContent);
-  pick = datatype[floor(random(344))];
-  //thingname = JSON.stringify(url1+pick.join()+url2);
-  //alert(typeof thingname); 
-}
-function newDraw() {
-  //alert(thingname);
-  //alert(typeof thingname);
-  //let url = url1+thingname+url2;
-  thingname = JSON.parse(document.getElementById('object').textContent);
-  let url = url1+thingname+url2;
-  console.log(url);
-  loadJSON(url, gotDraw);
-}
-
-function gotDraw(data) {
-  background(250);
-  cat = data.drawing;
-  //console.log(cat);
-  
-}
 
 
 function draw() {
-  if (cat) {
-    let x = cat[strokeIndex][0][index];
-    let y = cat[strokeIndex][1][index];
-    line_color = color(0, 0, 255);
-    stroke(line_color);
-    //strokeWeight(3);
-    if (prevx !== undefined) {
-      line(prevx, prevy, x, y);
-    }
-    index++;
-    if (index === cat[strokeIndex][0].length) {
-      strokeIndex++;
-      prevx = undefined;
-      prevy = undefined;
-      index = 0;
-      if (strokeIndex === cat.length) {
-        //console.log(strokeIndex);
-        cat = undefined;
-        strokeIndex = 0;
-        //setTimeout(newCat, 250);
-      }
-    } else {
-      prevx = x;
-      prevy = y;
-    }
-  }
+ //  alert(obj.strokeArray)
+  obj.display()
 }
 
 
+class DrawingObject {
+  constructor(name, color, size, number, location_X, location_Y, strokeArray) {
+    this.ready= 0;
+    this.name =name;
+    this.color= color;
+    this.size= size;
+    this.number= number;
+    this.index = 0;
+    this.strokeIndex = 0;
+    this.location_X = location_X;
+    this.location_Y = location_Y;
+    this.strokeArray = strokeArray;
+
+  }
+
+
+    display() {
+//alert(this.strokeArray.length);
+  for(let i=0; i <= this.strokeArray[this.strokeIndex][0].length; i++){
+      let x = this.strokeArray[this.strokeIndex][0][this.index]+this.location_X ;
+      let y = this.strokeArray[this.strokeIndex][1][this.index]+this.location_Y;
+      stroke(this.color);
+      if (this.prevx !== undefined) {
+        line(this.prevx, this.prevy, x, y);
+      }
+      this.index++;
+      if (this.index === this.strokeArray[this.strokeIndex][0].length) {
+      this.strokeIndex++;
+      this.prevx = undefined;
+      this.prevy = undefined;
+      this.index = 0;
+      if (this.strokeIndex === this.strokeArray.length) {
+        this.strokeArray = undefined;
+        this.strokeIndex = 0;
+      }
+    } else {
+      this.prevx = x;
+      this.prevy = y;
+    }
+  }
+
+  }
+}

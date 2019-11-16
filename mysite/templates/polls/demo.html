@@ -26,20 +26,27 @@
 		</form>		
 	</div>
 	
-	<div style="left;display: table-cell;background-color:#FFFEFB;width: 70%;" id="sketchholder">	
+	<div style="left;display: table-cell;background-color:#FFFEFB;width: 70%;" id="sketchholder">
 		{% load staticfiles %}
-        {{ object | json_script:"object" }}
+        {{ json | json_script:"json" }}
+        {% if obje %}
+                <img  src="{% static obje %}" alt="image">
+        {% else %}
         <script type="text/javascript" src="{% static "p5.js" %}"></script>
         <script type="text/javascript" src="{% static "sketch.js" %}"></script>
+        {% endif %}
 	</div>	
 	
 	<div style="vertical-align: middle;left;display: table-cell;width: 15%;background-color:#FFEED6;">
 		<div style="background-color:#FFF7ED;width: 80%;height:60%;margin:auto">
-			<p style="font-size:10px"> 
-				Recorded messages log
+			<p style="font-size:15px">
+				{{ origin }}
+            {{ sentence }}
 		</div>
-		
-		<button type="submit" name="button" class="button record64"><span class="center"></span></button>
+		<form action='record' method='GET'>
+            <button type="submit" name="record" class="button record64"><span class="center"></span></button>
+        </form>
+
 		<button type="submit" name="button" class="button stop64"><span class="center"></span></button>
 	</div>
 </div>
