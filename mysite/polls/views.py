@@ -16,7 +16,6 @@ from io import StringIO
 def index(request):
     return render(request, 'polls/index.html')
 
-
 def create_new_canvas(request):
     return HttpResponse("Started recording")
 
@@ -51,6 +50,6 @@ def draw_objects(request):
     objects = request.GET.get('objects')
     objects = objects.replace("'", "")
     list = objects.strip("][").split(', ')
-    return render(request, 'polls/drawing.html', {'object': list[0]})
+    return render(request, 'polls/demo.html', {'object': list[0]})
 
 

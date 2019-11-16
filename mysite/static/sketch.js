@@ -14,9 +14,11 @@ let url;
 let pick;
 
 function setup() {
-  createCanvas(600,600);
+  var canvas = createCanvas(1060,450);
+  canvas.parent("sketchholder");
   newDraw();
 }
+
 function pickathing(){
   thingname = JSON.parse(document.getElementById('object').textContent);
   pick = datatype[floor(random(344))];

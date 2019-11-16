@@ -1,32 +1,39 @@
 <!DOCTYPE html>
+
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
 <html lang="">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <style type="text/css">
-        .btn {
-              background-color: #4CAF50;
-              border: none;
-              color: white;
-              padding: 15px 32px;
-              text-align: center;
-              text-decoration: none;
-              display: inline-block;
-              font-size: 16px;
-              margin: 4px 2px;
-              cursor: pointer;
-        }
-</style>
-    <title>p5.js example</title>
-      <form action='request_page' method='GET'>
-       <div style="text-align: center;"> <button type="submit" class="btn" name="mybtn" value="true">Record</button></div>
-      </form>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">		
+    <title>Speech to Sketch!</title>
+	
+	{% load staticfiles %}
+        {{ object | json_script:"object" }}
+        <script type="text/javascript" src="{% static "p5.js" %}"></script>
+        <script type="text/javascript" src="{% static "sketch.js" %}"></script>		
+  </head>
+  
+  <body>
+  
+	<h1> Speech to Sketch </h1>
 
-      {% load staticfiles %}
+	<div style="margin-right: 20%; margin-bottom: 15%; margin-left: 20%;">
+	<p> Random text - Random text - Random text - Random text - Random text - Random text - Random text - Random text - Random text. </p></div>
+  
+	<form action='request_page' method='GET'>
+       <div style="text-align: center;"> <button type="submit" class="demo" name="mybtn" value="true">Try the Demo</button></div>
+      </form>
+  </body>
+  
+  
+</html>
+
+	
+	
+	{% load staticfiles %}
         {{ object | json_script:"object" }}
         <script type="text/javascript" src="{% static "p5.js" %}"></script>
         <script type="text/javascript" src="{% static "sketch.js" %}"></script>
-  </head>
-  <body>
-  </body>
-</html>
