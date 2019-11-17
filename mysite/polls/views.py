@@ -1,3 +1,5 @@
+from typing import List, Any
+
 from django.shortcuts import render
 import speech_recognition as sr
 from django.http import HttpResponse
@@ -12,9 +14,11 @@ import random
 from google.cloud import translate_v2 as translate
 
 museum_items = ["ship", "carriage"]
+obj_hist = []
 
 
 def index(request):
+    obj_hist.clear()
     return render(request, 'polls/index.html')
 
 def create_new_canvas(request):
@@ -36,7 +40,8 @@ def recordAndDraw(request):
     i = random.randrange(0, len(p), 1)
     y = json.loads("{" + p[i] + "}")
     obj.setStrokeArray(y["drawing"])
-    return render(request, 'polls/demo.html', {'origin': cumle, 'sentence': sentence, 'json': obj.to_json()})
+    obj_hist.append(obj.to_json())
+    return render(request, 'polls/demo.html', {'origin': cumle, 'sentence': sentence, 'json': obj_hist})
 
 
 def draw_objects(request):
@@ -60,7 +65,9 @@ def record():
     text = ""
     translated = ""
     with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source)
         audio = r.listen(source)
+
     try:
         sentence = r.recognize_google(audio, language="tr-TR")
         translate_client = translate.Client()

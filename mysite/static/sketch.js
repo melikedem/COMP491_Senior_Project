@@ -1,23 +1,15 @@
-//Google Quick-draw Key: AIzaSyC1_soqtXV1mTyetVpJ4GglGD5RtXuFp4o
-//https://quickdrawfiles.appspot.com/drawing/cat?&key=AIzaSyC1_soqtXV1mTyetVpJ4GglGD5RtXuFp4o&isAnimated={isAnimated}&format=JSON
-const url1 = 'https://quickdrawfiles.appspot.com/drawing/'
-const url2 = '?&key=AIzaSyC1_soqtXV1mTyetVpJ4GglGD5RtXuFp4o&isAnimated=false&format=JSON'
+let obj_array = [];
 
-
-let obj;
-
-let strokeIndex = 0;
-let index = 0;
-let cat;
-let prevx, prevy;
-let url; 
-let pick;
 
 
 function setup() {
-  let thingname = JSON.parse(document.getElementById('json').textContent);
-  let a = JSON.parse(thingname);
-  obj = new DrawingObject(a.name, a.color, a.size, a.number, 300, 100, a.strokeArray);
+  let list = JSON.parse(document.getElementById('json').textContent);
+  for (let i = 0; i< list.length; i++){
+    let a = JSON.parse(list[i]);
+    let obj = new DrawingObject(a.name, a.color, a.size, a.number, 100+ 250 * i, 100, a.strokeArray);
+    obj_array.push(obj);
+  }
+
   var canvas = createCanvas(1060,450);
   canvas.parent("sketchholder");
 }
@@ -25,8 +17,12 @@ function setup() {
 
 
 function draw() {
+    //translate(-275, -175);
+  //box(85);
  //  alert(obj.strokeArray)
-  obj.display()
+  for (let i = 0; i< obj_array.length; i++){
+    obj_array[i].display();
+  }
 }
 
 
@@ -50,7 +46,9 @@ class DrawingObject {
 //alert(this.strokeArray.length);
   for(let i=0; i <= this.strokeArray[this.strokeIndex][0].length; i++){
       let x = this.strokeArray[this.strokeIndex][0][this.index]+this.location_X ;
+      x = x * this.size;
       let y = this.strokeArray[this.strokeIndex][1][this.index]+this.location_Y;
+      y = y * this.size;
       stroke(this.color);
       if (this.prevx !== undefined) {
         line(this.prevx, this.prevy, x, y);
