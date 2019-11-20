@@ -13,9 +13,8 @@
 
 <div style="margin-right: 20%; margin-top: 20px; margin-left: 20%" >
 <p style="font-size:16px"> 
-	Tutorial for using speech to sketch - Random text - Random text - Random text - 
-	Random text - Random text - Random text - Random text - 
-	Random text - Random text - Random text.</p></div>
+	Click the record button and say a sentence. The sketcher can draw only one object at once.
+        You can specify the size, color and relative location of the object.</p></div>
 
 <div style="height: 450px;display: table;width: 100%;">
 	<div style="vertical-align: middle;display: table-cell;background-color:#FFEED6;width: 15%;">	
@@ -29,7 +28,10 @@
 	<div style="left;display: table-cell;background-color:#FFFEFB;width: 70%;" id="sketchholder">
 		{% load staticfiles %}
         {{ json | json_script:"json" }}
-        {% if obje %}
+        {{ error | json_script:"error" }}
+        {{ weather | json_script:"weather" }}
+
+        {%  if obje %}
                 <img  src="{% static obje %}" alt="image">
         {% else %}
         <script type="text/javascript" src="{% static "p5.js" %}"></script>
