@@ -4,6 +4,7 @@ from django.shortcuts import render
 import speech_recognition as sr
 from django.http import HttpResponse
 import spacy
+nlp = spacy.load("en_core_web_sm")
 from spacy import displacy
 from PIL import Image
 import webcolors
@@ -14,7 +15,7 @@ import random
 from google.cloud import translate_v2 as translate
 import os
 
-nlp = spacy.load("en_core_web_sm")
+
 museum_items = ["ship", "carriage"]
 obj_hist = []
 weather_state = "sun"
@@ -40,7 +41,7 @@ def recordAndDraw(request):
     context = record()
     cumle = context["origin"]
     sentence = context["text"]
-    obj_list = nlp1(sentence)
+    obj_list = sentence_processing(sentence)
     for m in obj_list:
         obj = json.loads(m)
         if "state" in obj:
@@ -81,7 +82,8 @@ def draw_objects(request):
         draw.append(obj.to_json())
     return render(request, 'polls/drawing.html', {'objs': draw})
 
-def nlp1(sentence):
+
+def sentence_processing(sentence):
     doc = nlp(sentence)
     main_lst_json = []
     weather = isWeather(doc)
@@ -93,6 +95,7 @@ def nlp1(sentence):
             main_lst_json.append(match_features(extract_features(doc, main_object), main_object).to_json())
     return main_lst_json
     return obj
+
 
 
 def record():
@@ -115,6 +118,7 @@ def record():
         text = "Could not request results from Google Speech Recognition service; {0}".format(e)
     context = {'origin': sentence, 'text': translated, 'error': text}
     return context
+
 
 
 class Object:
@@ -157,7 +161,7 @@ class Object2:
 
     def print(self):
         print("Name: ", self.name, "\tColor:", self.color, " Size:", self.size, " Number:", self.number, " Location:",
-              self.location)
+              self.location, self.action)
 
     def to_json(self):
         return json.dumps(self.__dict__)
@@ -180,6 +184,15 @@ def isNumber(feature):
         return True
     except:
         return False
+
+action_map = [["fly"],["run"],["walk"]]
+def isAction(feature):
+    if(feature.lemma_ in action_map[0]):
+      return "fly"
+    elif(feature.lemma_ in action_map[1]):
+      return "run"
+    elif(feature.lemma_ in action_map[2]):
+      return "walk"
 
 
 ## Functions to identify what information a feature gives about the object
@@ -293,9 +306,8 @@ def match_features(feature_lst, main_obj_token):
         elif (isPreposition(feature)):
             location = [child.lemma_ for child in feature.children if (child.tag_ == "NN")][0]
             ob.location = {"Preposition": feature.lemma_,
-                           "Location": location}
-
+                            "Location": location}
         elif (isAction(feature)):
             ob.action = feature.text
-
     return ob
+
