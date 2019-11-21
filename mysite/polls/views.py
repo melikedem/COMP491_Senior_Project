@@ -94,7 +94,7 @@ def sentence_processing(sentence):
         for main_object in main_lst:
             main_lst_json.append(match_features(extract_features(doc, main_object), main_object).to_json())
     return main_lst_json
-    return obj
+
 
 
 
@@ -185,15 +185,6 @@ def isNumber(feature):
     except:
         return False
 
-action_map = [["fly"],["run"],["walk"]]
-def isAction(feature):
-    if(feature.lemma_ in action_map[0]):
-      return "fly"
-    elif(feature.lemma_ in action_map[1]):
-      return "run"
-    elif(feature.lemma_ in action_map[2]):
-      return "walk"
-
 
 ## Functions to identify what information a feature gives about the object
 size_map = [
@@ -244,9 +235,7 @@ def isPreposition(feature):
         return False
 
 
-action_map = [["fly"], ["run"], ["walk"]]
-
-
+action_map = [["fly","flying"], ["run","running"], ["walk","walking","go","going"]]
 def isAction(feature):
     if (feature.lemma_ in action_map[0]):
         return "fly"
@@ -254,13 +243,17 @@ def isAction(feature):
         return "run"
     elif (feature.lemma_ in action_map[2]):
         return "walk"
-
+    return False
 
 def extract_main_object(doc):
     main_lst = [chunk.root for chunk in doc.noun_chunks if
                 chunk.root.dep_ == "ROOT" or chunk.root.dep_ == "nsubj" or chunk.root.dep_ == "attr"]
-    conj_lst = list([main.conjuncts for main in main_lst][0])
-    return main_lst + conj_lst
+    if(not main_lst):
+        try:
+            main_lst = [token for token in doc if token.pos_ == "NOUN"][0]
+        except:
+            print("extract_main_object error")
+    return main_lst
 
 
 def get_chunks(doc, main_obj_token):
@@ -270,27 +263,37 @@ def get_chunks(doc, main_obj_token):
 
 
 # Extract the relevant information of the main object
-# Implement better ->
 def extract_features(doc, main_obj_token):
     feature_lst = []
-    stack = [ancestor for ancestor in main_obj_token.ancestors]
+    stack = []
+    if(main_obj_token.ancestors):
+        stack += [ancestor for ancestor in main_obj_token.ancestors]
+    if(main_obj_token.children):
+        stack +=  [children for children in main_obj_token.children]
+   # stack = [ancestor for ancestor in main_obj_token.ancestors] + [children for children in main_obj_token.children]
     while stack:
-        print(stack)
         current = stack.pop()
         if (current.pos_ != "NOUN"):
             feature_lst.append(current)
-            stack += [ancestor for ancestor in current.children]
-    feature_lst += (get_chunks(doc, main_obj_token))
+            stack += [children for children in current.children]
     return feature_lst
 
 
 # Creates an "Object" based on the given information
 def match_features(feature_lst, main_obj_token):
     ob = Object(name=main_obj_token.lemma_)
+
+    if (main_obj_token.tag_ == "NNS"):
+            ob.number = random.randint(2, 5)
+
     for feature in feature_lst:
         feature_txt = feature.lemma_
         size = isSize(feature_txt)
-        if (size):
+        action = isAction(feature)
+        if (action):
+            ob.action = action
+
+        elif (size):
             ob.size = size
 
         elif (isColor(feature_txt)):
@@ -300,14 +303,10 @@ def match_features(feature_lst, main_obj_token):
             number = w2n.word_to_num(feature_txt)
             ob.number = number
 
-        elif (main_obj_token.tag_ == "NNS"):
-            ob.number = random.randint(2, 5)
-
         elif (isPreposition(feature)):
             location = [child.lemma_ for child in feature.children if (child.tag_ == "NN")][0]
             ob.location = {"Preposition": feature.lemma_,
                             "Location": location}
-        elif (isAction(feature)):
-            ob.action = feature.text
     return ob
+
 
