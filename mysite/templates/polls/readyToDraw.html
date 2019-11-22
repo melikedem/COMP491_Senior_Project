@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
 <html lang="">
   <head>
     <meta charset="utf-8">
@@ -26,7 +31,7 @@
 
        <form action='draw_objects' method='GET'>
            <input type="hidden" name="objects" value="{{objects}}" />
-       <button type="submit" class= "btn" name="drawbutton">Draw</button>
+       <button type="submit" class= "demo" name="drawbutton">Draw</button>
       </form>
           </div>
   </head>

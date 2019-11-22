@@ -7,10 +7,11 @@
 
       </style>
     <title>p5.js example</title>
+      {{ files }}
       {% load staticfiles %}
-        {{ object | json_script:"object" }}
+        {{ objs | json_script:"objs" }}
         <script type="text/javascript" src="{% static "p5.js" %}"></script>
-        <script type="text/javascript" src="{% static "sketch.js" %}"></script>
+        <script type="text/javascript" src="{% static "sketch2.js" %}"></script>
   </head>
   <body>
   </body>
